@@ -5,74 +5,249 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WordPickle — Learn 37 Languages Everyday</title>
   <meta name="description" content="WordPickle is an interactive vocabulary, alphabet, listening, speaking, and multiplayer language-learning game supporting 37 languages." />
+  <meta name="description" content="WordPickle is a neon arcade vocabulary, alphabet, listening, AI camera & voice, and real-time multiplayer language learning game across 37 languages." />
+  <meta property="og:title" content="WordPickle — Learn 37 Languages Everyday" />
+  <meta property="og:description" content="Master 37 languages with interactive alphabets, offline audio packs, Snap Hunt, Voice Whisper, and online multiplayer battles." />
+  <meta name="theme-color" content="#0d0819" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg: #0d0819;
       --card: rgba(255, 255, 255, 0.05);
       --border: rgba(255, 255, 255, 0.12);
+      --bg: #090614;
+      --bg-2: #120b24;
+      --surface: rgba(255, 255, 255, 0.045);
+      --surface-hover: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.11);
       --cyan: #00f0ff;
       --green: #69f0ae;
+      --green: #39ff9c;
       --amber: #ffd740;
+      --pink: #ff2e93;
       --purple: #9d4edd;
       --text: #f4f6fb;
       --muted: #a6aec4;
+      --text: #f5f7ff;
+      --muted: #a9b1cb;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background:
         radial-gradient(circle at 20% 10%, rgba(157, 78, 221, 0.24), transparent 45%),
         radial-gradient(circle at 80% 25%, rgba(0, 240, 255, 0.16), transparent 42%),
         var(--bg);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      overflow-x: hidden;
       line-height: 1.6;
     }
     .wrap {
       max-width: 900px;
+
+    /* Animated Neon Grid Backdrop */
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(157, 78, 221, 0.25), transparent 40%),
+        radial-gradient(circle at 82% 22%, rgba(0, 240, 255, 0.18), transparent 40%),
+        radial-gradient(circle at 50% 85%, rgba(255, 46, 147, 0.14), transparent 45%),
+        linear-gradient(180deg, #090614 0%, #0d081d 55%, #080512 100%);
+    }
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgba(0, 240, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.035) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: radial-gradient(circle at 50% 35%, black 35%, transparent 85%);
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 1140px;
       margin: 0 auto;
       padding: 48px 20px 64px;
+      padding: 0 22px;
     }
     .hero {
       text-align: center;
       padding: 36px 24px 44px;
       background: var(--card);
+
+    /* Navbar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(9, 6, 20, 0.72);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 1.25rem;
+      letter-spacing: 0.5px;
+    }
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: #070510;
+      border: 1.5px solid rgba(0, 240, 255, 0.45);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 18px rgba(0, 240, 255, 0.25);
+    }
+    .brand-word { color: var(--cyan); }
+    .brand-pickle { color: var(--green); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.15s ease;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lang-toggle {
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border);
       border-radius: 28px;
       backdrop-filter: blur(12px);
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      color: var(--text);
+      padding: 7px 13px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
     }
     .badge {
       display: inline-block;
       padding: 6px 14px;
+    .lang-toggle:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 64px 0 42px;
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 44px;
+      align-items: center;
+    }
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 15px;
       border-radius: 999px;
       font-size: 12px;
       font-weight: 700;
+      background: rgba(255, 215, 64, 0.1);
+      border: 1px solid rgba(255, 215, 64, 0.45);
+      color: var(--amber);
+      font-weight: 800;
+      font-size: 0.78rem;
       letter-spacing: 2px;
       color: var(--amber);
       background: rgba(255, 215, 64, 0.12);
       border: 1px solid rgba(255, 215, 64, 0.45);
+      text-transform: uppercase;
       margin-bottom: 18px;
     }
     h1 {
       font-size: clamp(2.2rem, 6vw, 3.6rem);
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.6; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5.2vw, 4.1rem);
       font-weight: 900;
       letter-spacing: 1px;
       margin-bottom: 12px;
+      line-height: 1.07;
+      margin-bottom: 18px;
+      letter-spacing: -0.5px;
     }
     .word { color: var(--cyan); text-shadow: 0 0 22px rgba(0, 240, 255, 0.45); }
     .pickle { color: var(--green); text-shadow: 0 0 22px rgba(105, 240, 174, 0.45); }
     .subtitle {
       max-width: 620px;
       margin: 0 auto 28px;
+    .neon-cyan {
+      color: var(--cyan);
+      text-shadow: 0 0 28px rgba(0, 240, 255, 0.45);
+    }
+    .neon-green {
+      color: var(--green);
+      text-shadow: 0 0 28px rgba(57, 255, 156, 0.4);
+    }
+    .hero p {
       color: var(--muted);
       font-size: 1.05rem;
+      font-size: 1.12rem;
+      max-width: 560px;
+      margin-bottom: 28px;
     }
     .cta-row {
+
+    .cta-group {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 12px;
+      gap: 14px;
+      margin-bottom: 30px;
     }
     .btn {
       display: inline-flex;
@@ -81,72 +256,421 @@
       padding: 13px 22px;
       border-radius: 14px;
       font-weight: 700;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 24px;
+      border-radius: 15px;
+      font-weight: 800;
+      font-size: 0.98rem;
       text-decoration: none;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
     .btn:hover { transform: translateY(-2px); }
     .btn-primary {
+    .btn-play {
       background: linear-gradient(135deg, var(--green), var(--cyan));
       color: #091217;
       box-shadow: 0 8px 24px rgba(0, 240, 255, 0.25);
+      color: #061016;
+      box-shadow: 0 10px 30px rgba(0, 240, 255, 0.28);
     }
     .btn-secondary {
       background: rgba(255, 255, 255, 0.07);
+    .btn-ios {
+      background: rgba(255, 255, 255, 0.06);
       color: var(--text);
       border: 1px solid var(--border);
+      border-color: rgba(255, 255, 255, 0.18);
     }
     .grid {
+    .btn-ios:hover {
+      border-color: var(--pink);
+      box-shadow: 0 8px 24px rgba(255, 46, 147, 0.2);
+    }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
+    }
+    .stat strong {
+      display: block;
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: var(--text);
+    }
+    .stat span {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* Interactive Phone Showcase */
+    .phone-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+    .phone-glow {
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.26), rgba(255, 46, 147, 0.18), transparent 70%);
+      filter: blur(24px);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+    }
+    .phone-frame {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 350px;
+      border-radius: 34px;
+      padding: 18px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.65);
+    }
+    .phone-screen {
+      background: linear-gradient(180deg, #130b29 0%, #090614 100%);
+      border-radius: 24px;
+      padding: 20px 18px;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+    }
+    .phone-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .chip-level {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(57, 255, 156, 0.12);
+      border: 1px solid rgba(57, 255, 156, 0.45);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .mascot-stage {
+      display: flex;
+      justify-content: center;
+      margin: 4px 0 12px;
+    }
+    .mascot-float {
+      animation: float 3.2s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(-3deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+    .demo-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      border-radius: 18px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: inset 0 0 24px rgba(0, 240, 255, 0.06);
+    }
+    .demo-lang {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--amber);
+      text-transform: uppercase;
+    }
+    .demo-word {
+      font-family: 'Balsamiq Sans', 'Outfit', sans-serif;
+      font-size: 1.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 6px 0 2px;
+      text-shadow: 0 0 16px rgba(0, 240, 255, 0.45);
+    }
+    .demo-phonetic {
+      font-size: 0.9rem;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+    .demo-meaning {
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+    .demo-controls {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .lang-pill {
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .lang-pill.active, .lang-pill:hover {
+      background: rgba(0, 240, 255, 0.16);
+      border-color: var(--cyan);
+      color: #fff;
+    }
+
+    /* Language Marquee */
+    .marquee-wrap {
+      margin: 26px 0 12px;
+      padding: 14px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+    }
+    .marquee-track {
+      display: flex;
+      gap: 14px;
+      width: max-content;
+      animation: scroll 36s linear infinite;
+    }
+    .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .lang-tag {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Sections */
+    section.block {
+      padding: 68px 0 18px;
+    }
+    .section-head {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 38px;
+    }
+    .section-kicker {
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+    .section-head h2 {
+      font-size: clamp(1.8rem, 3.6vw, 2.5rem);
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+    .section-head p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    /* Feature Cards */
+    .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 16px;
       margin-top: 28px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
     }
     .card {
       background: var(--card);
+    .feature-card {
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 22px;
+      border-radius: 22px;
+      padding: 24px;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     }
     .card h3 {
       font-size: 1.05rem;
+    .feature-card:hover {
+      transform: translateY(-4px);
+      background: var(--surface-hover);
+      border-color: rgba(0, 240, 255, 0.45);
+    }
+    .icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.35rem;
+      margin-bottom: 14px;
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+    .icon-pink { background: rgba(255, 46, 147, 0.12); border-color: rgba(255, 46, 147, 0.35); }
+    .icon-green { background: rgba(57, 255, 156, 0.12); border-color: rgba(57, 255, 156, 0.35); }
+    .icon-amber { background: rgba(255, 215, 64, 0.12); border-color: rgba(255, 215, 64, 0.35); }
+    .icon-purple { background: rgba(157, 78, 221, 0.16); border-color: rgba(157, 78, 221, 0.4); }
+
+    .feature-card h3 {
+      font-size: 1.12rem;
+      font-weight: 800;
       margin-bottom: 8px;
       color: var(--cyan);
     }
     .card p {
+    .feature-card p {
       color: var(--muted);
       font-size: 0.94rem;
+      font-size: 0.93rem;
     }
+
+    /* Multiplayer Banner */
+    .arena-banner {
+      margin-top: 24px;
+      padding: 32px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(157, 78, 221, 0.18), rgba(0, 240, 255, 0.1));
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .arena-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .arena-tag {
+      padding: 9px 14px;
+      border-radius: 12px;
+      background: rgba(9, 6, 20, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Footer */
     footer {
       margin-top: 38px;
       padding-top: 24px;
       border-top: 1px solid var(--border);
+      margin-top: 74px;
+      padding: 38px 0 48px;
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
       text-align: center;
       color: var(--muted);
       font-size: 0.9rem;
     }
     footer .links {
+    .footer-links {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 18px;
       margin-bottom: 12px;
+      gap: 22px;
+      margin-bottom: 14px;
     }
     footer a {
+    .footer-links a {
       color: var(--cyan);
       text-decoration: none;
       font-weight: 600;
+      font-weight: 700;
+      font-size: 0.94rem;
     }
     footer a:hover { text-decoration: underline; }
+    .footer-links a:hover { text-decoration: underline; }
+    .copyright {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
     .studio {
+      margin-top: 10px;
       font-size: 0.78rem;
       letter-spacing: 3px;
       color: rgba(255, 255, 255, 0.35);
       margin-top: 10px;
+      font-weight: 800;
+      letter-spacing: 3.5px;
+      color: rgba(255, 255, 255, 0.32);
+    }
+
+    @media (max-width: 920px) {
+      .hero, .arena-banner { grid-template-columns: 1fr; text-align: center; }
+      .hero p { margin-left: auto; margin-right: auto; }
+      .cta-group, .stats-row, .arena-tags { justify-content: center; }
+      .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .hero { padding-top: 38px; }
+      .arena-banner { padding: 22px; }
     }
   </style>
 </head>
 <body>
   <main class="wrap">
+  <div class="backdrop"></div>
+  <div class="grid-overlay"></div>
+
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#">
+        <span class="brand-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 64 64" fill="none">
+            <defs>
+              <linearGradient id="pkNav" x1="10" y1="54" x2="54" y2="10" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#00F0FF"/>
+                <stop offset="50%" stop-color="#9D4EDD"/>
+                <stop offset="100%" stop-color="#FF2E93"/>
+              </linearGradient>
+            </defs>
+            <path d="M44 10C49 10 54 15 52 22C49 34 39 46 25 52C17 55 11 50 12 43C14 35 23 26 32 18C37 13 40 10 44 10Z" stroke="url(#pkNav)" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="31" cy="30" r="2.2" fill="#39FF9C"/>
+            <circle cx="24" cy="40" r="2.2" fill="#00F0FF"/>
+            <circle cx="40" cy="22" r="2.2" fill="#FFD740"/>
+          </svg>
+        </span>
+        <span><span class="brand-word">WORD</span><span class="brand-pickle">PICKLE</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#modes" data-i18n="nav_modes">Game Modes</a>
+        <a href="#scripts" data-i18n="nav_scripts">37 Languages</a>
+        <a href="#multiplayer" data-i18n="nav_multi">Multiplayer</a>
+        <a href="#support" data-i18n="nav_support">Support</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="lang-toggle" id="langBtn" type="button">TR / EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
     <section class="hero">
       <div class="badge">LEARN 37 LANGUAGES EVERYDAY</div>
       <h1><span class="word">WORD</span><span class="pickle">PICKLE</span></h1>
@@ -161,6 +685,91 @@
         <a class="btn btn-secondary" href="mailto:omerdemir1357911@gmail.com">
           Contact Support
         </a>
+      <div>
+        <div class="pill-badge">
+          <span class="pill-dot"></span>
+          <span data-i18n="hero_badge">LEARN 37 LANGUAGES EVERYDAY</span>
+        </div>
+
+        <h1>
+          <span class="neon-cyan">WORD</span> <span class="neon-green">PICKLE</span><br />
+          <span data-i18n="hero_title">Play. Speak. Master 37 Languages.</span>
+        </h1>
+
+        <p data-i18n="hero_desc">
+          Turn daily vocabulary, unfamiliar alphabets, listening, and pronunciation into a fast-paced neon arcade adventure — online with friends or 100% offline anywhere.
+        </p>
+
+        <div class="cta-group">
+          <a class="btn btn-play" href="https://play.google.com/store/apps/details?id=com.animix.word_app" target="_blank" rel="noopener">
+            <span>▶</span>
+            <span data-i18n="cta_play">Get it on Google Play</span>
+          </a>
+          <a class="btn btn-ios" href="#support">
+            <span></span>
+            <span data-i18n="cta_ios">iOS App Store (Coming Soon)</span>
+          </a>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat">
+            <strong>37</strong>
+            <span data-i18n="stat_langs">World Languages</span>
+          </div>
+          <div class="stat">
+            <strong>15+</strong>
+            <span data-i18n="stat_modes">Game &amp; Script Modes</span>
+          </div>
+          <div class="stat">
+            <strong>Offline</strong>
+            <span data-i18n="stat_offline">Audio &amp; Word Packs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE WORD PREVIEW -->
+      <div class="phone-wrap">
+        <div class="phone-glow"></div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-top">
+              <span class="chip-level">A1 • LIVE PREVIEW</span>
+              <span>🔥 12x COMBO</span>
+            </div>
+
+            <div class="mascot-stage">
+              <svg class="mascot-float" width="92" height="92" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pkHero" x1="20" y1="100" x2="100" y2="20" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#00F0FF"/>
+                    <stop offset="50%" stop-color="#9D4EDD"/>
+                    <stop offset="100%" stop-color="#FF2E93"/>
+                  </linearGradient>
+                </defs>
+                <path d="M84 18C94 18 102 27 98 40C92 64 73 87 46 98C31 104 20 95 23 81C27 65 44 48 61 32C70 23 76 18 84 18Z" fill="rgba(0,240,255,0.08)" stroke="url(#pkHero)" stroke-width="7" stroke-linecap="round"/>
+                <circle cx="56" cy="56" r="4" fill="#39FF9C"/>
+                <circle cx="44" cy="74" r="4" fill="#00F0FF"/>
+                <circle cx="74" cy="40" r="4" fill="#FFD740"/>
+                <circle cx="67" cy="64" r="3" fill="#FF2E93"/>
+              </svg>
+            </div>
+
+            <div class="demo-card">
+              <div class="demo-lang" id="demoLang">JAPANESE (日本語)</div>
+              <div class="demo-word" id="demoWord">りんご</div>
+              <div class="demo-phonetic" id="demoPhonetic">ringo</div>
+              <div class="demo-meaning" id="demoMeaning">Apple • Elma</div>
+
+              <div class="demo-controls" id="demoPills">
+                <button class="lang-pill active" type="button" data-idx="0">🇯🇵 JP</button>
+                <button class="lang-pill" type="button" data-idx="1">🇰🇷 KR</button>
+                <button class="lang-pill" type="button" data-idx="2">🇸🇦 AR</button>
+                <button class="lang-pill" type="button" data-idx="3">🇪🇸 ES</button>
+                <button class="lang-pill" type="button" data-idx="4">🇹🇷 TR</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -168,14 +777,120 @@
       <div class="card">
         <h3>37 Languages &amp; Offline Packs</h3>
         <p>Download lightweight language and offline audio packs to practice anywhere without an internet connection.</p>
+    <!-- 37 LANGUAGES MARQUEE -->
+    <div class="marquee-wrap" id="scripts">
+      <div class="marquee-track">
+        <span class="lang-tag">🇬🇧 English</span>
+        <span class="lang-tag">🇹🇷 Türkçe</span>
+        <span class="lang-tag">🇪🇸 Español</span>
+        <span class="lang-tag">🇩🇪 Deutsch</span>
+        <span class="lang-tag">🇫🇷 Français</span>
+        <span class="lang-tag">🇮🇹 Italiano</span>
+        <span class="lang-tag">🇵🇹 Português</span>
+        <span class="lang-tag">🇷🇺 Русский</span>
+        <span class="lang-tag">🇯🇵 日本語</span>
+        <span class="lang-tag">🇰🇷 한국어</span>
+        <span class="lang-tag">🇨🇳 中文</span>
+        <span class="lang-tag">🇸🇦 العربية</span>
+        <span class="lang-tag">🇮🇳 हिन्दी</span>
+        <span class="lang-tag">🇦🇿 Azərbaycan</span>
+        <span class="lang-tag">🇮🇷 فارسی</span>
+        <span class="lang-tag">🇺🇿 Oʻzbek</span>
+        <span class="lang-tag">🇰🇬 Кыргызча</span>
+        <span class="lang-tag">🇵🇱 Polski</span>
+        <span class="lang-tag">🇺🇦 Українська</span>
+        <span class="lang-tag">🇹🇭 ไทย</span>
+        <span class="lang-tag">🇮🇱 עברית</span>
+        <span class="lang-tag">🇧🇩 বাংলা</span>
+        <span class="lang-tag">🇬🇷 Ελληνικά</span>
+        <span class="lang-tag">🇸🇪 Svenska</span>
+        <span class="lang-tag">🇳🇱 Nederlands</span>
+        <span class="lang-tag">🇻🇳 Tiếng Việt</span>
+        <span class="lang-tag">🇮🇩 Bahasa Indonesia</span>
+        <!-- duplicate for seamless loop -->
+        <span class="lang-tag">🇬🇧 English</span>
+        <span class="lang-tag">🇹🇷 Türkçe</span>
+        <span class="lang-tag">🇪🇸 Español</span>
+        <span class="lang-tag">🇩🇪 Deutsch</span>
+        <span class="lang-tag">🇫🇷 Français</span>
+        <span class="lang-tag">🇮🇹 Italiano</span>
+        <span class="lang-tag">🇵🇹 Português</span>
+        <span class="lang-tag">🇷🇺 Русский</span>
+        <span class="lang-tag">🇯🇵 日本語</span>
+        <span class="lang-tag">🇰🇷 한국어</span>
+        <span class="lang-tag">🇨🇳 中文</span>
+        <span class="lang-tag">🇸🇦 العربية</span>
       </div>
       <div class="card">
         <h3>Alphabets &amp; Spelling</h3>
         <p>Interactive guides for Arabic, Cyrillic, Japanese, Korean, Hindi, Thai, Hebrew, Bengali, and more.</p>
+    </div>
+
+    <!-- GAME MODES -->
+    <section class="block" id="modes">
+      <div class="section-head">
+        <div class="section-kicker" data-i18n="modes_kicker">BUILT FOR REAL RETENTION</div>
+        <h2 data-i18n="modes_title">Every Skill, One Neon Playground</h2>
+        <p data-i18n="modes_sub">Switch effortlessly between quick vocabulary drills, alphabet mastery, real-world camera quests, and live voice challenges.</p>
       </div>
       <div class="card">
         <h3>Solo, Local &amp; Online Party</h3>
         <p>Play solo quizzes, Snap Hunt, Voice Whisper, pass-and-play modes, or real-time online rooms with friends.</p>
+
+      <div class="cards-grid">
+        <article class="feature-card">
+          <div class="icon-box">⌨️</div>
+          <h3 data-i18n="f1_title">Classic, Match &amp; Spelling Bee</h3>
+          <p data-i18n="f1_desc">Fill missing letters, pair meanings against the clock, build full sentences, and train A1–C1 vocabulary.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="icon-box icon-pink">🔤</div>
+          <h3 data-i18n="f2_title">Deep Alphabet &amp; Script Guides</h3>
+          <p data-i18n="f2_desc">Step-by-step interactive lessons for Arabic, Japanese, Korean Hangul blocks, Hindi, Thai, Hebrew, Bengali &amp; Polish.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="icon-box icon-green">🎙️</div>
+          <h3 data-i18n="f3_title">Voice Whisper &amp; Snap Hunt</h3>
+          <p data-i18n="f3_desc">Speak words out loud to test pronunciation or snap real objects around you with your camera to learn on the go.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="icon-box icon-amber">🎧</div>
+          <h3 data-i18n="f4_title">Offline Language &amp; Audio Packs</h3>
+          <p data-i18n="f4_desc">Download lightweight language packs and native pronunciations to keep learning on flights, subways, or anywhere offline.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="icon-box icon-purple">🌐</div>
+          <h3 data-i18n="f5_title">Smart Transliteration &amp; Speed</h3>
+          <p data-i18n="f5_desc">Read non-Latin scripts in Latin phonetics or native script, and adjust speech playback between Slow, Normal, and Fast.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="icon-box">🎨</div>
+          <h3 data-i18n="f6_title">Unlockable Neon Themes</h3>
+          <p data-i18n="f6_desc">Customize fonts, dynamic glowing letter boxes, word highlight colors, and themes as you level up.</p>
+        </article>
+      </div>
+
+      <!-- MULTIPLAYER ARENA -->
+      <div class="arena-banner" id="multiplayer">
+        <div>
+          <div class="section-kicker" data-i18n="multi_kicker">PLAY TOGETHER</div>
+          <h2 style="font-size:1.75rem;margin-bottom:10px;" data-i18n="multi_title">Local P2P &amp; Online Multiplayer Battles</h2>
+          <p style="color:var(--muted);font-size:0.96rem;" data-i18n="multi_desc">
+            Challenge friends right next to you over local wireless, pass-and-play on a single phone, or join real-time online rooms.
+          </p>
+        </div>
+        <div class="arena-tags">
+          <span class="arena-tag">⚡ Hacker Race</span>
+          <span class="arena-tag">🛡️ Cyber Sabotage</span>
+          <span class="arena-tag">🎉 Party Rooms</span>
+          <span class="arena-tag">📡 P2P Nearby</span>
+          <span class="arena-tag">👥 Pass &amp; Play</span>
+        </div>
       </div>
     </section>
 
@@ -183,11 +898,141 @@
       <div class="links">
         <a href="https://miuusaaa.github.io/WordPickle-Packs/privacy-policy.html">Privacy Policy</a>
         <a href="https://miuusaaa.github.io/WordPickle-Packs/delete-account.html">Delete Account</a>
+    <footer id="support">
+      <div class="footer-links">
+        <a href="https://miuusaaa.github.io/WordPickle-Packs/privacy-policy.html" data-i18n="link_privacy">Privacy Policy</a>
+        <a href="https://miuusaaa.github.io/WordPickle-Packs/delete-account.html" data-i18n="link_delete">Delete Account</a>
         <a href="mailto:omerdemir1357911@gmail.com">omerdemir1357911@gmail.com</a>
       </div>
       <div>&copy; 2026 WordPickle &bull; All rights reserved.</div>
+      <div class="copyright">&copy; 2026 WordPickle &bull; All rights reserved.</div>
       <div class="studio">MIUUSAAA GAMES</div>
     </footer>
   </main>
+
+  <script>
+    const demos = [
+      { lang: 'JAPANESE (日本語)', word: 'りんご', phonetic: 'ringo', meaning: 'Apple • Elma' },
+      { lang: 'KOREAN (한국어)', word: '사과', phonetic: 'sagwa', meaning: 'Apple • Elma' },
+      { lang: 'ARABIC (العربية)', word: 'تُفَّاحَة', phonetic: 'tuffāḥah', meaning: 'Apple • Elma' },
+      { lang: 'SPANISH (ESPAÑOL)', word: 'Manzana', phonetic: 'man-SA-na', meaning: 'Apple • Elma' },
+      { lang: 'TURKISH (TÜRKÇE)', word: 'Elma', phonetic: 'el-ma', meaning: 'Apple • التفاحة' }
+    ];
+
+    const demoLang = document.getElementById('demoLang');
+    const demoWord = document.getElementById('demoWord');
+    const demoPhonetic = document.getElementById('demoPhonetic');
+    const demoMeaning = document.getElementById('demoMeaning');
+    const pills = document.querySelectorAll('#demoPills .lang-pill');
+
+    function setDemo(idx) {
+      const d = demos[idx];
+      demoLang.textContent = d.lang;
+      demoWord.textContent = d.word;
+      demoPhonetic.textContent = d.phonetic;
+      demoMeaning.textContent = d.meaning;
+      pills.forEach((p, i) => p.classList.toggle('active', i === idx));
+    }
+
+    let autoIdx = 0;
+    let timer = setInterval(() => {
+      autoIdx = (autoIdx + 1) % demos.length;
+      setDemo(autoIdx);
+    }, 3200);
+
+    pills.forEach(btn => {
+      btn.addEventListener('click', () => {
+        clearInterval(timer);
+        autoIdx = Number(btn.dataset.idx);
+        setDemo(autoIdx);
+      });
+    });
+
+    const i18n = {
+      en: {
+        nav_modes: 'Game Modes',
+        nav_scripts: '37 Languages',
+        nav_multi: 'Multiplayer',
+        nav_support: 'Support',
+        hero_badge: 'LEARN 37 LANGUAGES EVERYDAY',
+        hero_title: 'Play. Speak. Master 37 Languages.',
+        hero_desc: 'Turn daily vocabulary, unfamiliar alphabets, listening, and pronunciation into a fast-paced neon arcade adventure — online with friends or 100% offline anywhere.',
+        cta_play: 'Get it on Google Play',
+        cta_ios: 'iOS App Store (Coming Soon)',
+        stat_langs: 'World Languages',
+        stat_modes: 'Game & Script Modes',
+        stat_offline: 'Audio & Word Packs',
+        modes_kicker: 'BUILT FOR REAL RETENTION',
+        modes_title: 'Every Skill, One Neon Playground',
+        modes_sub: 'Switch effortlessly between quick vocabulary drills, alphabet mastery, real-world camera quests, and live voice challenges.',
+        f1_title: 'Classic, Match & Spelling Bee',
+        f1_desc: 'Fill missing letters, pair meanings against the clock, build full sentences, and train A1–C1 vocabulary.',
+        f2_title: 'Deep Alphabet & Script Guides',
+        f2_desc: 'Step-by-step interactive lessons for Arabic, Japanese, Korean Hangul blocks, Hindi, Thai, Hebrew, Bengali & Polish.',
+        f3_title: 'Voice Whisper & Snap Hunt',
+        f3_desc: 'Speak words out loud to test pronunciation or snap real objects around you with your camera to learn on the go.',
+        f4_title: 'Offline Language & Audio Packs',
+        f4_desc: 'Download lightweight language packs and native pronunciations to keep learning on flights, subways, or anywhere offline.',
+        f5_title: 'Smart Transliteration & Speed',
+        f5_desc: 'Read non-Latin scripts in Latin phonetics or native script, and adjust speech playback between Slow, Normal, and Fast.',
+        f6_title: 'Unlockable Neon Themes',
+        f6_desc: 'Customize fonts, dynamic glowing letter boxes, word highlight colors, and themes as you level up.',
+        multi_kicker: 'PLAY TOGETHER',
+        multi_title: 'Local P2P & Online Multiplayer Battles',
+        multi_desc: 'Challenge friends right next to you over local wireless, pass-and-play on a single phone, or join real-time online rooms.',
+        link_privacy: 'Privacy Policy',
+        link_delete: 'Delete Account'
+      },
+      tr: {
+        nav_modes: 'Oyun Modları',
+        nav_scripts: '37 Dil',
+        nav_multi: 'Çok Oyunculu',
+        nav_support: 'Destek',
+        hero_badge: 'HER GÜN 37 DİL ÖĞREN',
+        hero_title: 'Oyna. Konuş. 37 Dilde Ustalaş.',
+        hero_desc: 'Günlük kelime öğrenimini, yabancı alfabeleri, dinleme ve telaffuzu hızlı bir neon arcade deneyimine dönüştür — ister arkadaşlarınla online, ister her yerde %100 çevrimdışı.',
+        cta_play: "Google Play'den İndir",
+        cta_ios: 'iOS App Store (Çok Yakında)',
+        stat_langs: 'Dünya Dili',
+        stat_modes: 'Oyun & Alfabe Modu',
+        stat_offline: 'Ses & Kelime Paketi',
+        modes_kicker: 'KALICI ÖĞRENME İÇİN TASARLANDI',
+        modes_title: 'Tüm Beceriler Tek Bir Neon Arenada',
+        modes_sub: 'Hızlı kelime egzersizleri, alfabe dersleri, kameralı nesne avı ve sesli telaffuz modları arasında tek dokunuşla geçiş yap.',
+        f1_title: 'Klasik, Eşleştirme & Spelling Bee',
+        f1_desc: 'Eksik harfleri tamamla, süreye karşı anlamları eşleştir, cümle kur ve A1–C1 kelime dağarcığını geliştir.',
+        f2_title: 'Kapsamlı Alfabe & Yazım Dersleri',
+        f2_desc: 'Arapça, Japonca, Korece Hangul blokları, Hintçe, Tayca, İbranice, Bengalce ve Lehçe için adım adım rehberler.',
+        f3_title: 'Sesli Fısıltı & Snap Hunt',
+        f3_desc: 'Kelimeleri sesli söyleyerek telaffuzunu test et veya kameranla etrafındaki nesneleri okutup öğren.',
+        f4_title: 'Çevrimdışı Dil & Ses Paketleri',
+        f4_desc: 'Hafif dil ve telaffuz paketlerini indir; uçakta, metroda veya internetsiz her yerde öğrenmeye devam et.',
+        f5_title: 'Akıllı Okunuş & Hız Kontrolü',
+        f5_desc: 'Latin dışı alfabeleri ister okunuşuyla ister orijinal yazımıyla gör; seslendirme hızını Yavaş, Normal veya Hızlı ayarla.',
+        f6_title: 'Açılabilir Neon Temalar',
+        f6_desc: 'Seviye atladıkça yazı tiplerini, parlayan harf kutularını, kelime renklerini ve neon temaları özelleştir.',
+        multi_kicker: 'BİRLİKTE OYNA',
+        multi_title: 'Yerel P2P & Gerçek Zamanlı Online Arena',
+        multi_desc: 'Yanındaki arkadaşlarınla kablosuz P2P veya tek telefonda sıra sende modunda yarış ya da anlık online odalara katıl.',
+        link_privacy: 'Gizlilik Politikası',
+        link_delete: 'Hesap Silme'
+      }
+    };
+
+    let currentLang = (navigator.language || '').toLowerCase().startsWith('tr') ? 'tr' : 'en';
+    function applyLang(lang) {
+      currentLang = lang;
+      const dict = i18n[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (dict[key]) el.textContent = dict[key];
+      });
+      document.getElementById('langBtn').textContent = lang === 'tr' ? 'EN / TR' : 'TR / EN';
+    }
+    applyLang(currentLang);
+    document.getElementById('langBtn').addEventListener('click', () => {
+      applyLang(currentLang === 'en' ? 'tr' : 'en');
+    });
+  </script>
 </body>
 </html>
